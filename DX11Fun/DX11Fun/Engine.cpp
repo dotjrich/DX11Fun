@@ -114,7 +114,11 @@ Engine::InitWindow()
         return;
     }
 
-    m_hWnd = CreateWindow(m_lpszApplicationName, L"DX11 Fun", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, NULL, NULL, m_hInstance, NULL);
+    // We want an 800x600 client area.
+    RECT wr = { 0, 0, 800, 600 };
+    AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
+
+    m_hWnd = CreateWindow(m_lpszApplicationName, L"DX11 Fun", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, m_hInstance, NULL);
     if (!m_hWnd) {
         MessageBox(NULL, L"Failed to create window.", NULL, MB_ICONERROR | MB_OK);
         return;
