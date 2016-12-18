@@ -29,6 +29,7 @@ private:
     ID3D11Device* m_pDevice;
     ID3D11DeviceContext* m_pDeviceContext;
     IDXGISwapChain* m_pSwapChain;
+    ID3D11RenderTargetView* m_pBackBuffer;
 
     void InitWindow();
     void CleanupWindow();

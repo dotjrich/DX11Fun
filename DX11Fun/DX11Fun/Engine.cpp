@@ -149,6 +149,7 @@ Engine::CleanupWindow()
 void
 Engine::InitD3D()
 {
+    // Initialize our device, device context, and swap chain.
     DXGI_SWAP_CHAIN_DESC scd;
     ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
@@ -160,6 +161,15 @@ Engine::InitD3D()
     scd.Windowed = true;
 
     D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL, D3D11_SDK_VERSION, &scd, &m_pSwapChain, &m_pDevice, NULL, &m_pDeviceContext);
+
+    // Set up the back buffer.
+    ID3D11Texture2D* pBackBuffer;
+    m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    
+    m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pBackBuffer);
+    pBackBuffer->Release();
+
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBuffer, NULL);
 }
 
 // -----------------------------------------------------------------------
@@ -167,6 +177,7 @@ Engine::InitD3D()
 void
 Engine::CleanupD3D()
 {
+    m_pBackBuffer->Release();
     m_pSwapChain->Release();
     m_pDevice->Release();
     m_pDeviceContext->Release();
