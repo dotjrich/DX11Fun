@@ -5,6 +5,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <dxgi.h>
+#include <d3d11.h>
 
 #include "Engine.hpp"
 
@@ -30,6 +32,7 @@ void
 Engine::Startup()
 {
     InitWindow();
+    InitD3D();
 
     hEngine = this;
 }
@@ -39,6 +42,7 @@ Engine::Startup()
 void
 Engine::Shutdown()
 {
+    CleanupD3D();
     CleanupWindow();
 
     hEngine = NULL;
@@ -140,6 +144,36 @@ Engine::CleanupWindow()
     }
 }
 
+// -----------------------------------------------------------------------
+
+void
+Engine::InitD3D()
+{
+    DXGI_SWAP_CHAIN_DESC scd;
+    ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
+
+    scd.BufferCount = 1;
+    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    scd.OutputWindow = m_hWnd;
+    scd.SampleDesc.Count = 4;
+    scd.Windowed = true;
+
+    D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL, D3D11_SDK_VERSION, &scd, &m_pSwapChain, &m_pDevice, NULL, &m_pDeviceContext);
+}
+
+// -----------------------------------------------------------------------
+
+void
+Engine::CleanupD3D()
+{
+    m_pSwapChain->Release();
+    m_pDevice->Release();
+    m_pDeviceContext->Release();
+}
+
+// -----------------------------------------------------------------------
+// External to class.
 // -----------------------------------------------------------------------
 
 LRESULT CALLBACK

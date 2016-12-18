@@ -7,6 +7,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <dxgi.h>
+#include <d3d11.h>
 
 class Engine {
 public:
@@ -24,8 +26,15 @@ private:
     HWND m_hWnd;
     LPCWSTR m_lpszApplicationName;
 
+    ID3D11Device* m_pDevice;
+    ID3D11DeviceContext* m_pDeviceContext;
+    IDXGISwapChain* m_pSwapChain;
+
     void InitWindow();
     void CleanupWindow();
+
+    void InitD3D();
+    void CleanupD3D();
 };
 
 // Proxy for our WndProc in the class.
