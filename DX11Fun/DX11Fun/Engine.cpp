@@ -10,6 +10,9 @@
 
 #include "Engine.hpp"
 
+#define _WIDTH 800
+#define _HEIGHT 600
+
 // -----------------------------------------------------------------------
 // Public.
 // -----------------------------------------------------------------------
@@ -118,8 +121,8 @@ Engine::InitWindow()
         return;
     }
 
-    // We want an 800x600 client area.
-    RECT wr = { 0, 0, 800, 600 };
+    // Set up our client area based on our width and height.
+    RECT wr = { 0, 0, _WIDTH, _HEIGHT };
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
     m_hWnd = CreateWindow(m_lpszApplicationName, L"DX11 Fun", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, m_hInstance, NULL);
@@ -170,6 +173,17 @@ Engine::InitD3D()
     pBackBuffer->Release();
 
     m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBuffer, NULL);
+
+    // Set up viewport.
+    D3D11_VIEWPORT viewport;
+    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = _WIDTH;
+    viewport.Height = _HEIGHT;
+
+    m_pDeviceContext->RSSetViewports(1, &viewport);
 }
 
 // -----------------------------------------------------------------------
