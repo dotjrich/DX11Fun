@@ -72,6 +72,8 @@ Engine::Run()
 
             TranslateMessage(&msg);
             DispatchMessage(&msg);
+        } else {
+            RenderFrame();
         }
     }
 }
@@ -195,6 +197,17 @@ Engine::CleanupD3D()
     m_pSwapChain->Release();
     m_pDevice->Release();
     m_pDeviceContext->Release();
+}
+
+// -----------------------------------------------------------------------
+
+void
+Engine::RenderFrame()
+{
+    static float rgClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    m_pDeviceContext->ClearRenderTargetView(m_pBackBuffer, rgClearColor);
+
+    m_pSwapChain->Present(0, 0);
 }
 
 // -----------------------------------------------------------------------

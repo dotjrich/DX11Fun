@@ -36,6 +36,8 @@ private:
 
     void InitD3D();
     void CleanupD3D();
+
+    void RenderFrame();
 };
 
 // Proxy for our WndProc in the class.
